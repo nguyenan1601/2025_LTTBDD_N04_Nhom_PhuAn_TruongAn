@@ -3,23 +3,31 @@ import '/services/auth_services.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback onTapRegister;
-  const LoginPage({super.key, required this.onTapRegister});
+  const LoginPage({
+    super.key,
+    required this.onTapRegister,
+  });
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginPage> createState() =>
+      _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final passwordController =
+      TextEditingController();
   final auth = AuthService();
   bool _isLoading = false;
 
   void signIn() async {
-    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+    if (emailController.text.isEmpty ||
+        passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Vui lòng điền đầy đủ thông tin!'),
+          content: Text(
+            'Vui lòng điền đầy đủ thông tin!',
+          ),
           backgroundColor: Colors.orange,
         ),
       );
@@ -34,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
       emailController.text.trim(),
       passwordController.text.trim(),
     );
-    
+
     setState(() {
       _isLoading = false;
     });
@@ -42,7 +50,9 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Đăng nhập thành công!'),
+          content: const Text(
+            'Đăng nhập thành công!',
+          ),
           backgroundColor: Colors.green[400],
           behavior: SnackBarBehavior.floating,
         ),
@@ -50,7 +60,9 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Đăng nhập thất bại! Vui lòng kiểm tra lại thông tin.'),
+          content: const Text(
+            'Đăng nhập thất bại! Vui lòng kiểm tra lại thông tin.',
+          ),
           backgroundColor: Colors.red[400],
           behavior: SnackBarBehavior.floating,
         ),
@@ -67,32 +79,38 @@ class _LoginPageState extends State<LoginPage> {
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
               children: [
                 // Back button
-                IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 8,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      Icons.arrow_back,
-                      color: Colors.grey[700],
-                      size: 20,
-                    ),
-                  ),
-                ),
-
+                // IconButton(
+                //   onPressed: () =>
+                //       Navigator.of(context).pop(),
+                //   icon: Container(
+                //     padding: const EdgeInsets.all(
+                //       8,
+                //     ),
+                //     decoration: BoxDecoration(
+                //       color: Colors.white,
+                //       borderRadius:
+                //           BorderRadius.circular(
+                //             12,
+                //           ),
+                //       boxShadow: [
+                //         BoxShadow(
+                //           color: Colors.black12,
+                //           blurRadius: 8,
+                //           offset: Offset(0, 2),
+                //         ),
+                //       ],
+                //     ),
+                //     child: Icon(
+                //       Icons.arrow_back,
+                //       color: Colors.grey[700],
+                //       size: 20,
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(height: 40),
 
                 // Header
@@ -118,10 +136,13 @@ class _LoginPageState extends State<LoginPage> {
 
                 // Login Form
                 Container(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(
+                    24,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius:
+                        BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black12,
@@ -136,26 +157,38 @@ class _LoginPageState extends State<LoginPage> {
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.grey[50],
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius:
+                              BorderRadius.circular(
+                                12,
+                              ),
                         ),
                         child: TextField(
-                          controller: emailController,
+                          controller:
+                              emailController,
                           decoration: InputDecoration(
                             labelText: 'Email',
-                            labelStyle: TextStyle(color: Colors.grey[600]),
+                            labelStyle: TextStyle(
+                              color: Colors
+                                  .grey[600],
+                            ),
                             prefixIcon: Icon(
-                              Icons.email_outlined,
-                              color: Colors.grey[500],
+                              Icons
+                                  .email_outlined,
+                              color: Colors
+                                  .grey[500],
                             ),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 16,
-                            ),
+                            border:
+                                InputBorder.none,
+                            contentPadding:
+                                const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 16,
+                                ),
                           ),
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.grey[800],
+                            color:
+                                Colors.grey[800],
                           ),
                         ),
                       ),
@@ -166,27 +199,38 @@ class _LoginPageState extends State<LoginPage> {
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.grey[50],
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius:
+                              BorderRadius.circular(
+                                12,
+                              ),
                         ),
                         child: TextField(
-                          controller: passwordController,
+                          controller:
+                              passwordController,
                           obscureText: true,
                           decoration: InputDecoration(
                             labelText: 'Mật khẩu',
-                            labelStyle: TextStyle(color: Colors.grey[600]),
+                            labelStyle: TextStyle(
+                              color: Colors
+                                  .grey[600],
+                            ),
                             prefixIcon: Icon(
                               Icons.lock_outline,
-                              color: Colors.grey[500],
+                              color: Colors
+                                  .grey[500],
                             ),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 16,
-                            ),
+                            border:
+                                InputBorder.none,
+                            contentPadding:
+                                const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 16,
+                                ),
                           ),
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.grey[800],
+                            color:
+                                Colors.grey[800],
                           ),
                         ),
                       ),
@@ -198,30 +242,49 @@ class _LoginPageState extends State<LoginPage> {
                         width: double.infinity,
                         height: 56,
                         child: ElevatedButton(
-                          onPressed: _isLoading ? null : signIn,
+                          onPressed: _isLoading
+                              ? null
+                              : signIn,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            foregroundColor: Colors.white,
+                            backgroundColor:
+                                Colors.blue,
+                            foregroundColor:
+                                Colors.white,
                             elevation: 2,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius:
+                                  BorderRadius.circular(
+                                    12,
+                                  ),
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            padding:
+                                const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
                           ),
                           child: _isLoading
                               ? SizedBox(
                                   width: 20,
                                   height: 20,
                                   child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    strokeWidth:
+                                        2,
+                                    valueColor:
+                                        AlwaysStoppedAnimation<
+                                          Color
+                                        >(
+                                          Colors
+                                              .white,
+                                        ),
                                   ),
                                 )
                               : Text(
                                   'Đăng nhập',
                                   style: TextStyle(
                                     fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight:
+                                        FontWeight
+                                            .w600,
                                   ),
                                 ),
                         ),
@@ -234,23 +297,29 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           Expanded(
                             child: Divider(
-                              color: Colors.grey[300],
+                              color: Colors
+                                  .grey[300],
                               thickness: 1,
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            padding:
+                                const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
                             child: Text(
                               'hoặc',
                               style: TextStyle(
-                                color: Colors.grey[500],
+                                color: Colors
+                                    .grey[500],
                                 fontSize: 14,
                               ),
                             ),
                           ),
                           Expanded(
                             child: Divider(
-                              color: Colors.grey[300],
+                              color: Colors
+                                  .grey[300],
                               thickness: 1,
                             ),
                           ),
@@ -264,20 +333,32 @@ class _LoginPageState extends State<LoginPage> {
                         width: double.infinity,
                         height: 56,
                         child: OutlinedButton(
-                          onPressed: widget.onTapRegister,
+                          onPressed: widget
+                              .onTapRegister,
                           style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.blue,
-                            side: BorderSide(color: Colors.blue, width: 1.5),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                            foregroundColor:
+                                Colors.blue,
+                            side: BorderSide(
+                              color: Colors.blue,
+                              width: 1.5,
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(
+                                    12,
+                                  ),
+                            ),
+                            padding:
+                                const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
                           ),
                           child: Text(
                             'Tạo tài khoản mới',
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                              fontWeight:
+                                  FontWeight.w600,
                             ),
                           ),
                         ),

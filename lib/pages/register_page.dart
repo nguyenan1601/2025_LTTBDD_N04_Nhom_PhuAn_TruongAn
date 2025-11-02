@@ -117,8 +117,7 @@ class _RegisterPageState
               children: [
                 // Back button
                 IconButton(
-                  onPressed: () =>
-                      Navigator.of(context).pop(),
+                  onPressed: widget.onTapLogin,
                   icon: Container(
                     padding: const EdgeInsets.all(
                       8,
