@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '/services/auth_services.dart';
+import 'EditProfilePage.dart';
+import 'NotificationPage.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -26,7 +28,10 @@ class ProfilePage extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.blue[100],
-                border: Border.all(color: Colors.blue, width: 3),
+                border: Border.all(
+                  color: Colors.blue,
+                  width: 3,
+                ),
               ),
               child: Icon(
                 Icons.person,
@@ -56,15 +61,30 @@ class ProfilePage extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: _buildStatCard('Nhiệm vụ', '24', Icons.task_alt, Colors.green),
+                  child: _buildStatCard(
+                    'Nhiệm vụ',
+                    '24',
+                    Icons.task_alt,
+                    Colors.green,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: _buildStatCard('Dự án', '8', Icons.folder, Colors.blue),
+                  child: _buildStatCard(
+                    'Dự án',
+                    '8',
+                    Icons.folder,
+                    Colors.blue,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: _buildStatCard('Ngày', '127', Icons.calendar_today, Colors.orange),
+                  child: _buildStatCard(
+                    'Ngày',
+                    '127',
+                    Icons.calendar_today,
+                    Colors.orange,
+                  ),
                 ),
               ],
             ),
@@ -76,19 +96,45 @@ class ProfilePage extends StatelessWidget {
               title: 'Chỉnh sửa hồ sơ',
               icon: Icons.edit,
               color: Colors.blue,
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    // Gọi EditProfilePage đã tạo
+                    builder: (context) =>
+                        const EditProfilePage(),
+                  ),
+                );
+              },
             ),
             _buildMenuCard(
               title: 'Cài đặt thông báo',
               icon: Icons.notifications,
               color: Colors.orange,
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    // Gọi EditProfilePage đã tạo
+                    builder: (context) =>
+                        const NotificationPage(),
+                  ),
+                );
+              },
             ),
             _buildMenuCard(
               title: 'Bảo mật',
               icon: Icons.security,
               color: Colors.green,
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        const (),
+                  ),
+                );
+              },
             ),
             _buildMenuCard(
               title: 'Trợ giúp & Hỗ trợ',
@@ -108,7 +154,12 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -130,7 +181,11 @@ class ProfilePage extends StatelessWidget {
               color: color.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: color, size: 20),
+            child: Icon(
+              icon,
+              color: color,
+              size: 20,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
@@ -177,7 +232,11 @@ class ProfilePage extends StatelessWidget {
             color: Colors.grey[800],
           ),
         ),
-        trailing: Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          size: 16,
+          color: Colors.grey[400],
+        ),
         onTap: onTap,
       ),
     );
