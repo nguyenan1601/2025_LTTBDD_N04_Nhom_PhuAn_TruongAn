@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '/services/auth_services.dart';
 import 'EditProfilePage.dart';
 import 'NotificationPage.dart';
+import 'security_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -115,7 +116,6 @@ class ProfilePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    // Gọi EditProfilePage đã tạo
                     builder: (context) =>
                         const NotificationPage(),
                   ),
@@ -131,7 +131,7 @@ class ProfilePage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        const (),
+                        SecurityPage(),
                   ),
                 );
               },
