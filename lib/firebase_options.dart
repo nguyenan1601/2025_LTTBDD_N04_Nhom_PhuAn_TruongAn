@@ -46,6 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '338607451081',
     projectId: 'todolist-63f19',
     authDomain: 'todolist-63f19.firebaseapp.com',
+    databaseURL: 'https://todolist-63f19-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'todolist-63f19.firebasestorage.app',
   );
 
@@ -54,6 +55,7 @@ class DefaultFirebaseOptions {
     appId: '1:338607451081:android:2825633faea2af11029618',
     messagingSenderId: '338607451081',
     projectId: 'todolist-63f19',
+    databaseURL: 'https://todolist-63f19-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'todolist-63f19.firebasestorage.app',
   );
 
@@ -62,6 +64,7 @@ class DefaultFirebaseOptions {
     appId: '1:338607451081:ios:0b1676896f8f7cf4029618',
     messagingSenderId: '338607451081',
     projectId: 'todolist-63f19',
+    databaseURL: 'https://todolist-63f19-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'todolist-63f19.firebasestorage.app',
     iosBundleId: 'com.example.myApp',
   );
@@ -71,6 +74,7 @@ class DefaultFirebaseOptions {
     appId: '1:338607451081:ios:0b1676896f8f7cf4029618',
     messagingSenderId: '338607451081',
     projectId: 'todolist-63f19',
+    databaseURL: 'https://todolist-63f19-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'todolist-63f19.firebasestorage.app',
     iosBundleId: 'com.example.myApp',
   );
@@ -81,6 +85,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '338607451081',
     projectId: 'todolist-63f19',
     authDomain: 'todolist-63f19.firebaseapp.com',
+    databaseURL: 'https://todolist-63f19-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'todolist-63f19.firebasestorage.app',
   );
+
 }

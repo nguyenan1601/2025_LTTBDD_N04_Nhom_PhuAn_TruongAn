@@ -1,32 +1,51 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth =
+      FirebaseAuth.instance;
 
-  // Đăng ký tài khoản mới
-  Future<User?> signUp(String email, String password) async {
+  // Lấy user hiện tại
+  User? getCurrentUser() {
+    return _auth.currentUser;
+  }
+
+  // Stream theo dõi thay đổi user
+  Stream<User?> get userChanges {
+    return _auth.authStateChanges();
+  }
+
+  // Đăng ký
+  Future<User?> signUp(
+    String email,
+    String password,
+  ) async {
     try {
-      final result = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      UserCredential result = await _auth
+          .createUserWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
       return result.user;
     } catch (e) {
-      print("Sign up error: $e");
+      print('Lỗi đăng ký: $e');
       return null;
     }
   }
 
   // Đăng nhập
-  Future<User?> signIn(String email, String password) async {
+  Future<User?> signIn(
+    String email,
+    String password,
+  ) async {
     try {
-      final result = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      UserCredential result = await _auth
+          .signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
       return result.user;
     } catch (e) {
-      print("Sign in error: $e");
+      print('Lỗi đăng nhập: $e');
       return null;
     }
   }
@@ -35,7 +54,4 @@ class AuthService {
   Future<void> signOut() async {
     await _auth.signOut();
   }
-
-  // Stream theo dõi trạng thái đăng nhập
-  Stream<User?> get userChanges => _auth.authStateChanges();
 }
