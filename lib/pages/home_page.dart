@@ -1,218 +1,139 @@
 import 'package:flutter/material.dart';
-import '../services/auth_services.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class Task {
+  String title;
+  bool isCompleted;
+
+  Task({
+    required this.title,
+    this.isCompleted = false,
+  });
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final auth = AuthService();
+  State<HomePage> createState() =>
+      _HomePageState();
+}
 
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        title: const Text(
-          'Danh sách nhiệm vụ',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-          ),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 1,
-        shadowColor: Colors.black12,
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(
-              right: 8,
-            ),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.grey[100],
-            ),
-            child: IconButton(
-              onPressed: () => auth.signOut(),
-              icon: Icon(
-                Icons.logout,
-                color: Colors.grey[700],
-                size: 22,
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
-        children: [
-          // Header section
-          Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Xin chào!',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[800],
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Đây là trang quản lý nhiệm vụ của bạn',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-          ),
+class _HomePageState extends State<HomePage> {
+  DateTime _selectedDate = DateTime.now();
+  Map<DateTime, List<Task>> _tasksByDate = {};
+  final TextEditingController _taskController =
+      TextEditingController();
 
-          // Stats cards
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24.0,
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: _buildStatCard(
-                    'Hoàn thành',
-                    '12',
-                    Colors.green,
-                    Icons.check_circle_outline,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildStatCard(
-                    'Đang thực hiện',
-                    '5',
-                    Colors.orange,
-                    Icons.access_time,
-                  ),
-                ),
-              ],
-            ),
-          ),
+  List<Task> get _todayTasks {
+    final dateKey = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    );
+    return _tasksByDate[dateKey] ?? [];
+  }
 
-          // Recent tasks section
-          Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Nhiệm vụ gần đây',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey[800],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                _buildTaskItem(
-                  'Thiết kế giao diện người dùng',
-                  true,
-                ),
-                _buildTaskItem(
-                  'Phát triển tính năng mới',
-                  false,
-                ),
-                _buildTaskItem(
-                  'Kiểm thử ứng dụng',
-                  false,
-                ),
-                _buildTaskItem(
-                  'Cập nhật tài liệu',
-                  true,
-                ),
-              ],
-            ),
-          ),
+  int get _completedTasks => _todayTasks
+      .where((task) => task.isCompleted)
+      .length;
+  int get _pendingTasks =>
+      _todayTasks.length - _completedTasks;
 
-          // Quick actions
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24.0,
-            ),
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius:
-                    BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Thao tác nhanh',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment
-                            .spaceAround,
-                    children: [
-                      _buildQuickAction(
-                        Icons.add,
-                        'Thêm mới',
-                        Colors.blue,
-                      ),
-                      _buildQuickAction(
-                        Icons.calendar_today,
-                        'Lịch',
-                        Colors.green,
-                      ),
-                      _buildQuickAction(
-                        Icons.notifications,
-                        'Nhắc nhở',
-                        Colors.orange,
-                      ),
-                      _buildQuickAction(
-                        Icons.settings,
-                        'Cài đặt',
-                        Colors.grey,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Thêm nhiệm vụ mới
-        },
-        backgroundColor: Colors.blue,
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 28,
+  void _addTask(String title) {
+    final dateKey = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    );
+    setState(() {
+      _tasksByDate.putIfAbsent(dateKey, () => []);
+      _tasksByDate[dateKey]!.add(
+        Task(title: title),
+      );
+    });
+    _taskController.clear();
+
+    // Hiệu ứng haptic feedback
+    _showSuccessMessage(
+      'Đã thêm nhiệm vụ thành công!',
+    );
+  }
+
+  void _deleteTask(int index) {
+    final dateKey = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    );
+    setState(() {
+      _tasksByDate[dateKey]!.removeAt(index);
+    });
+    _showSuccessMessage('Đã xoá nhiệm vụ!');
+  }
+
+  void _toggleComplete(int index) {
+    final dateKey = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    );
+    setState(() {
+      _tasksByDate[dateKey]![index].isCompleted =
+          !_tasksByDate[dateKey]![index]
+              .isCompleted;
+    });
+  }
+
+  void _showSuccessMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
     );
+  }
+
+  void _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Colors.blue,
+              onPrimary: Colors.white,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() => _selectedDate = picked);
+    }
+  }
+
+  String _formatDate(DateTime date) {
+    final vietnameseDays = [
+      'CN',
+      'T2',
+      'T3',
+      'T4',
+      'T5',
+      'T6',
+      'T7',
+    ];
+    final dayOfWeek =
+        vietnameseDays[date.weekday % 7];
+    return '$dayOfWeek, ${date.day} Th${date.month}, ${date.year}';
   }
 
   Widget _buildStatCard(
@@ -225,12 +146,12 @@ class HomePage extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black12,
-            blurRadius: 8,
-            offset: Offset(0, 2),
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -241,11 +162,11 @@ class HomePage extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(6),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: color.withOpacity(0.1),
                   borderRadius:
-                      BorderRadius.circular(8),
+                      BorderRadius.circular(10),
                 ),
                 child: Icon(
                   icon,
@@ -270,6 +191,7 @@ class HomePage extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],
@@ -277,89 +199,566 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildTaskItem(
-    String task,
-    bool isCompleted,
-  ) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 4,
-            offset: Offset(0, 1),
+  @override
+  Widget build(BuildContext context) {
+    final themeColor = Colors.blue;
+
+    return Scaffold(
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 1,
+        shadowColor: Colors.black12,
+        title: Column(
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Quản lý nhiệm vụ',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Colors.grey[800],
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              _formatDate(_selectedDate),
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(
+              right: 8,
+            ),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey[100],
+            ),
+            child: IconButton(
+              icon: Icon(
+                Icons.calendar_today_outlined,
+                color: Colors.grey[700],
+                size: 20,
+              ),
+              onPressed: _pickDate,
+            ),
           ),
         ],
       ),
-      child: Row(
+      body: Column(
         children: [
-          Container(
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-              color: isCompleted
-                  ? Colors.green
-                  : Colors.grey[300],
-              shape: BoxShape.circle,
+          // Stats Section
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _buildStatCard(
+                    'Hoàn thành',
+                    _completedTasks.toString(),
+                    Colors.green,
+                    Icons.check_circle_outline,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildStatCard(
+                    'Chưa hoàn thành',
+                    _pendingTasks.toString(),
+                    Colors.orange,
+                    Icons.access_time,
+                  ),
+                ),
+              ],
             ),
-            child: isCompleted
-                ? Icon(
-                    Icons.check,
-                    color: Colors.white,
-                    size: 16,
-                  )
-                : null,
           ),
-          const SizedBox(width: 16),
+
+          // Tasks List
           Expanded(
-            child: Text(
-              task,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[800],
-                decoration: isCompleted
-                    ? TextDecoration.lineThrough
-                    : null,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              child: _todayTasks.isEmpty
+                  ? Column(
+                      mainAxisAlignment:
+                          MainAxisAlignment
+                              .center,
+                      children: [
+                        Icon(
+                          Icons.task_alt_outlined,
+                          size: 80,
+                          color: Colors.grey[300],
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Text(
+                          'Chưa có nhiệm vụ nào',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color:
+                                Colors.grey[500],
+                            fontWeight:
+                                FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Hãy thêm nhiệm vụ đầu tiên của bạn!',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color:
+                                Colors.grey[400],
+                          ),
+                        ),
+                      ],
+                    )
+                  : ListView.builder(
+                      itemCount:
+                          _todayTasks.length,
+                      itemBuilder: (context, index) {
+                        final task =
+                            _todayTasks[index];
+                        return Container(
+                          margin:
+                              const EdgeInsets.only(
+                                bottom: 8,
+                              ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.circular(
+                                  12,
+                                ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors
+                                    .black
+                                    .withOpacity(
+                                      0.03,
+                                    ),
+                                blurRadius: 6,
+                                offset:
+                                    const Offset(
+                                      0,
+                                      2,
+                                    ),
+                              ),
+                            ],
+                          ),
+                          child: Dismissible(
+                            key: Key(
+                              '$index-${task.title}',
+                            ),
+                            direction:
+                                DismissDirection
+                                    .endToStart,
+                            background: Container(
+                              decoration:
+                                  BoxDecoration(
+                                    color: Colors
+                                        .red
+                                        .shade50,
+                                    borderRadius:
+                                        BorderRadius.circular(
+                                          12,
+                                        ),
+                                  ),
+                              alignment: Alignment
+                                  .centerRight,
+                              padding:
+                                  const EdgeInsets.only(
+                                    right: 20,
+                                  ),
+                              child: Icon(
+                                Icons
+                                    .delete_outline,
+                                color: Colors
+                                    .red
+                                    .shade400,
+                                size: 24,
+                              ),
+                            ),
+                            onDismissed:
+                                (direction) =>
+                                    _deleteTask(
+                                      index,
+                                    ),
+                            child: ListTile(
+                              contentPadding:
+                                  const EdgeInsets.symmetric(
+                                    horizontal:
+                                        16,
+                                    vertical: 8,
+                                  ),
+                              leading: GestureDetector(
+                                onTap: () =>
+                                    _toggleComplete(
+                                      index,
+                                    ),
+                                child: AnimatedContainer(
+                                  duration:
+                                      const Duration(
+                                        milliseconds:
+                                            300,
+                                      ),
+                                  width: 28,
+                                  height: 28,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        task.isCompleted
+                                        ? themeColor
+                                        : Colors
+                                              .grey[200],
+                                    borderRadius:
+                                        BorderRadius.circular(
+                                          8,
+                                        ),
+                                    border:
+                                        task.isCompleted
+                                        ? null
+                                        : Border.all(
+                                            color:
+                                                Colors.grey[300]!,
+                                            width:
+                                                2,
+                                          ),
+                                  ),
+                                  child:
+                                      task.isCompleted
+                                      ? const Icon(
+                                          Icons
+                                              .check,
+                                          color: Colors
+                                              .white,
+                                          size:
+                                              18,
+                                        )
+                                      : null,
+                                ),
+                              ),
+                              title: Text(
+                                task.title,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight:
+                                      FontWeight
+                                          .w500,
+                                  color:
+                                      task.isCompleted
+                                      ? Colors
+                                            .grey[500]
+                                      : Colors
+                                            .grey[800],
+                                  decoration:
+                                      task.isCompleted
+                                      ? TextDecoration
+                                            .lineThrough
+                                      : TextDecoration
+                                            .none,
+                                ),
+                              ),
+                              trailing: IconButton(
+                                icon: Icon(
+                                  Icons.more_vert,
+                                  color: Colors
+                                      .grey[400],
+                                  size: 20,
+                                ),
+                                onPressed: () {
+                                  _showTaskOptions(
+                                    context,
+                                    index,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ),
+
+          // Add Task Input
+          Container(
+            margin: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(
+                16,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(
+                    0.05,
+                  ),
+                  blurRadius: 10,
+                  offset: const Offset(0, -2),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _taskController,
+                    decoration: InputDecoration(
+                      hintText:
+                          'Thêm nhiệm vụ mới...',
+                      hintStyle: TextStyle(
+                        color: Colors.grey[500],
+                        fontSize: 15,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding:
+                          const EdgeInsets.symmetric(
+                            horizontal: 0,
+                            vertical: 4,
+                          ),
+                    ),
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    onSubmitted: (value) {
+                      if (value
+                          .trim()
+                          .isNotEmpty) {
+                        _addTask(value.trim());
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Container(
+                  decoration: BoxDecoration(
+                    color: themeColor,
+                    borderRadius:
+                        BorderRadius.circular(10),
+                  ),
+                  child: IconButton(
+                    onPressed: () {
+                      if (_taskController.text
+                          .trim()
+                          .isNotEmpty) {
+                        _addTask(
+                          _taskController.text
+                              .trim(),
+                        );
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 22,
+                    ),
+                    padding: const EdgeInsets.all(
+                      12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showTaskOptions(
+    BuildContext context,
+    int index,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius:
+                      BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ListTile(
+                leading: Icon(
+                  Icons.edit_outlined,
+                  color: Colors.blue[600],
+                ),
+                title: const Text(
+                  'Chỉnh sửa',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showEditTaskDialog(index);
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  _todayTasks[index].isCompleted
+                      ? Icons
+                            .radio_button_unchecked
+                      : Icons
+                            .check_circle_outline,
+                  color: Colors.orange[600],
+                ),
+                title: Text(
+                  _todayTasks[index].isCompleted
+                      ? 'Đánh dấu chưa hoàn thành'
+                      : 'Đánh dấu hoàn thành',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _toggleComplete(index);
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.delete_outline,
+                  color: Colors.red[400],
+                ),
+                title: const Text(
+                  'Xoá nhiệm vụ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.red,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showDeleteConfirmation(index);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showEditTaskDialog(int index) {
+    final task = _todayTasks[index];
+    final editController = TextEditingController(
+      text: task.title,
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'Chỉnh sửa nhiệm vụ',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        content: TextField(
+          controller: editController,
+          decoration: InputDecoration(
+            hintText: 'Nhập nhiệm vụ...',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(
+                12,
               ),
             ),
           ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () =>
+                Navigator.pop(context),
+            child: const Text('Huỷ'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (editController.text
+                  .trim()
+                  .isNotEmpty) {
+                final dateKey = DateTime(
+                  _selectedDate.year,
+                  _selectedDate.month,
+                  _selectedDate.day,
+                );
+                setState(() {
+                  _tasksByDate[dateKey]![index]
+                      .title = editController.text
+                      .trim();
+                });
+                Navigator.pop(context);
+                _showSuccessMessage(
+                  'Đã cập nhật nhiệm vụ!',
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Lưu'),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildQuickAction(
-    IconData icon,
-    String label,
-    Color color,
-  ) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            icon,
-            color: color,
-            size: 24,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
+  void _showDeleteConfirmation(int index) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'Xác nhận xoá',
           style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey[600],
+            fontWeight: FontWeight.w600,
           ),
         ),
-      ],
+        content: const Text(
+          'Bạn có chắc chắn muốn xoá nhiệm vụ này?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () =>
+                Navigator.pop(context),
+            child: const Text('Huỷ'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _deleteTask(index);
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+            child: const Text('Xoá'),
+          ),
+        ],
+      ),
     );
   }
 }
