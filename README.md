@@ -1,16 +1,61 @@
-# my_app
+# To-Do List App Flutter
 
-A new Flutter project.
+Một dự án Flutter để quản lý công việc đơn giản.
 
-## Getting Started
+## Mô tả
 
-This project is a starting point for a Flutter application.
+Đây là một dự án Flutter minh họa một ứng dụng quản lý công việc đơn giản. Nó bao gồm các tính năng như xác thực người dùng, tạo tác vụ và chế độ xem lịch.
 
-A few resources to get you started if this is your first Flutter project:
+## Tính năng
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+*   Đăng ký và đăng nhập người dùng
+*   Các thao tác Tạo, Đọc, Cập nhật, Xóa (CRUD) cho các tác vụ
+*   Chế độ xem lịch để xem các tác vụ theo ngày
+*   Trang hồ sơ để quản lý thông tin người dùng
+*   Hỗ trợ hai ngôn ngữ Việt - Anh 
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Bắt đầu
+
+### Điều kiện
+
+*   Flutter SDK: Đảm bảo rằng bạn đã cài đặt Flutter SDK. Bạn có thể tìm thấy hướng dẫn cài đặt [tại đây](https://flutter.dev/docs/get-started/install).
+*   Firebase: Dự án này sử dụng Firebase cho các dịch vụ xác thực và cơ sở dữ liệu. Bạn sẽ cần tạo một dự án Firebase và định cấu hình nó cho nền tảng của mình (Android/iOS/Web).
+
+### Cài đặt
+
+1.  Sao chép kho lưu trữ:
+    ```bash
+    git clone https://github.com/your-username/my_app.git
+    ```
+2.  Điều hướng đến thư mục dự án:
+    ```bash
+    cd my_app
+    ```
+3.  Cài đặt các phụ thuộc:
+    ```bash
+    flutter pub get
+    ```
+4.  Chạy ứng dụng:
+    ```bash
+    flutter run
+    ```
+
+## Các phụ thuộc
+
+Dự án này sử dụng các phụ thuộc sau:
+
+*   `flutter`
+*   `cupertino_icons`
+*   `go_router`
+*   `flutter_riverpod`
+*   `google_fonts`
+*   `riverpod_annotation`
+*   `intl`
+*   `firebase_auth`
+*   `firebase_core`
+*   `cloud_firestore`
+*   `easy_localization`
+*   `flutter_localizations`
+*   `flutter_gen`
+
+
