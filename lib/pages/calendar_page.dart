@@ -112,7 +112,7 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   Widget _buildCalendar() {
-    final localizations = AppLocalizations.of(context)!;
+    // final localizations = AppLocalizations.of(context)!;
     
     return GridView.builder(
       padding: const EdgeInsets.all(16),
