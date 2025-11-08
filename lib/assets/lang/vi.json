@@ -107,7 +107,7 @@
   "register_snackbar_fail": "Đăng ký thất bại! Email có thể đã được sử dụng.",
 
   "security_page_title": "Bảo mật",
-  "security_change_password": "Mật khẩu cũ",
+  "security_change_password": "Đổi Mật khẩu",
   "security_two_factor_auth": "Xác thực hai yếu tố (2FA)",
   "security_two_factor_snackbar": "Mở cài đặt 2FA",
   "security_logged_devices": "Thiết bị đã đăng nhập",

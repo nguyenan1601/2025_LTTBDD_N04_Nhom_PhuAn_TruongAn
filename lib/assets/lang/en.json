@@ -107,7 +107,7 @@
   "register_snackbar_fail": "Sign up failed! Email might already be used.",
 
   "security_page_title": "Security",
-  "security_change_password": "Current Password",
+  "security_change_password": "Change Password",
   "security_two_factor_auth": "Two-Factor Authentication (2FA)",
   "security_two_factor_snackbar": "Open 2FA settings",
   "security_logged_devices": "Logged-in Devices",
@@ -148,7 +148,7 @@
   "label_email": "Email",
   "language_english": "English",
   "language_vietnamese": "Vietnamese",
-  "securityOldPasswordLabel": "Old Password",
-  "securityNewPasswordLabel": "New Password",
-  "securityConfirmPasswordLabel": "Confirm New Password"
+  "security_old_password_label": "Old Password",
+  "security_new_password_label": "New Password",
+  "security_confirm_password_label": "Confirm New Password"
 }
