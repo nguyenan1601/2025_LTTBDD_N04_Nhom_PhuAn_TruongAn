@@ -107,7 +107,7 @@
   "register_snackbar_fail": "Đăng ký thất bại! Email có thể đã được sử dụng.",
 
   "security_page_title": "Bảo mật",
-  "security_change_password": "Đổi mật khẩu",
+  "security_change_password": "Mật khẩu cũ",
   "security_two_factor_auth": "Xác thực hai yếu tố (2FA)",
   "security_two_factor_snackbar": "Mở cài đặt 2FA",
   "security_logged_devices": "Thiết bị đã đăng nhập",
@@ -146,5 +146,8 @@
   "label_dob": "Ngày sinh",
   "label_email": "Email",
   "language_english": "Tiếng Anh",
-  "language_vietnamese": "Tiếng Việt"
+  "language_vietnamese": "Tiếng Việt",
+  "security_old_password_label": "Mật Khẩu Cũ",
+  "security_new_password_label": "Mật Khẩu Mới",
+  "security_confirm_password_label": "Xác Nhận Mật Khẩu Mới"
 }

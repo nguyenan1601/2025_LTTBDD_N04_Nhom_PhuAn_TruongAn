@@ -356,6 +356,13 @@ class AppLocalizations {
       translate('language_english');
   String get languageVietnamese =>
       translate('language_vietnamese');
+  String get securityOldPasswordLabel =>
+      translate('security_old_password_label');
+  String get securityNewPasswordLabel =>
+      translate('security_new_password_label');
+  String get securityConfirmPasswordLabel =>
+      translate('security_confirm_password_label');
+  
 
   // Helper method cho list
   List<String> getMonthNames() {

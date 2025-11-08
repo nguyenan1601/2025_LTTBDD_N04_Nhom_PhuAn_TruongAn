@@ -101,13 +101,13 @@
   "register_terms_text": "By signing up, you agree to",
   "register_terms_link": "Terms of Use & Privacy Policy",
   "register_snackbar_empty_fields": "Please fill in all fields!",
-  "register_snackbar_password_mismatch": "Passwords do not match!",
+  "register_snackbar_password_mismatch": "Password do not match!",
   "register_snackbar_password_short": "Password must be at least 6 characters!",
   "register_snackbar_success": "Sign up successful!",
   "register_snackbar_fail": "Sign up failed! Email might already be used.",
 
   "security_page_title": "Security",
-  "security_change_password": "Change Password",
+  "security_change_password": "Current Password",
   "security_two_factor_auth": "Two-Factor Authentication (2FA)",
   "security_two_factor_snackbar": "Open 2FA settings",
   "security_logged_devices": "Logged-in Devices",
@@ -147,5 +147,8 @@
   "label_dob": "Date of Birth",
   "label_email": "Email",
   "language_english": "English",
-  "language_vietnamese": "Vietnamese"
+  "language_vietnamese": "Vietnamese",
+  "securityOldPasswordLabel": "Old Password",
+  "securityNewPasswordLabel": "New Password",
+  "securityConfirmPasswordLabel": "Confirm New Password"
 }

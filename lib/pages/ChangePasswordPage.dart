@@ -5,54 +5,40 @@ class ChangePasswordPage extends StatefulWidget {
   ChangePasswordPage({super.key});
 
   @override
-  State<ChangePasswordPage> createState() =>
-      _ChangePasswordPageState();
+  State<ChangePasswordPage> createState() => _ChangePasswordPageState();
 }
 
-class _ChangePasswordPageState
-    extends State<ChangePasswordPage> {
-  final TextEditingController
-  _oldPasswordController =
-      TextEditingController();
-  final TextEditingController
-  _newPasswordController =
-      TextEditingController();
-  final TextEditingController
-  _confirmPasswordController =
-      TextEditingController();
-
+class _ChangePasswordPageState extends State<ChangePasswordPage> {
+  final TextEditingController _oldPasswordController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  
   bool _obscureOldPassword = true;
   bool _obscureNewPassword = true;
   bool _obscureConfirmPassword = true;
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(
-      context,
-    )!;
+    final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: Text(
-          localizations.securityChangePassword,
-        ),
+        title: Text(localizations.securityChangePassword),
         backgroundColor: Colors.white,
         elevation: 1,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Container cho các trường nhập liệu
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius:
-                    BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black12,
@@ -65,18 +51,14 @@ class _ChangePasswordPageState
                 children: [
                   // Mật khẩu cũ
                   _buildCustomTextField(
-                    controller:
-                        _oldPasswordController,
-                    label: localizations
-                        .securityChangePassword,
+                    controller: _oldPasswordController,
+                    label: localizations.securityChangePassword,
                     icon: Icons.lock_outline,
                     isPassword: true,
-                    obscureText:
-                        _obscureOldPassword,
+                    obscureText: _obscureOldPassword,
                     onToggleVisibility: () {
                       setState(() {
-                        _obscureOldPassword =
-                            !_obscureOldPassword;
+                        _obscureOldPassword = !_obscureOldPassword;
                       });
                     },
                   ),
@@ -84,18 +66,14 @@ class _ChangePasswordPageState
 
                   // Mật khẩu mới
                   _buildCustomTextField(
-                    controller:
-                        _newPasswordController,
-                    label: localizations
-                        .registerPasswordLabel,
+                    controller: _newPasswordController,
+                    label: localizations.registerPasswordLabel,
                     icon: Icons.lock_open,
                     isPassword: true,
-                    obscureText:
-                        _obscureNewPassword,
+                    obscureText: _obscureNewPassword,
                     onToggleVisibility: () {
                       setState(() {
-                        _obscureNewPassword =
-                            !_obscureNewPassword;
+                        _obscureNewPassword = !_obscureNewPassword;
                       });
                     },
                   ),
@@ -103,19 +81,14 @@ class _ChangePasswordPageState
 
                   // Mật khẩu xác nhận
                   _buildCustomTextField(
-                    controller:
-                        _confirmPasswordController,
-                    label: localizations
-                        .registerConfirmPasswordLabel,
-                    icon: Icons
-                        .check_circle_outline,
+                    controller: _confirmPasswordController,
+                    label: localizations.registerConfirmPasswordLabel,
+                    icon: Icons.check_circle_outline,
                     isPassword: true,
-                    obscureText:
-                        _obscureConfirmPassword,
+                    obscureText: _obscureConfirmPassword,
                     onToggleVisibility: () {
                       setState(() {
-                        _obscureConfirmPassword =
-                            !_obscureConfirmPassword;
+                        _obscureConfirmPassword = !_obscureConfirmPassword;
                       });
                     },
                   ),
@@ -132,13 +105,9 @@ class _ChangePasswordPageState
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
-                padding:
-                    const EdgeInsets.symmetric(
-                      vertical: 16,
-                    ),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
               child: Text(
@@ -156,19 +125,15 @@ class _ChangePasswordPageState
   }
 
   void _changePassword(BuildContext context) {
-    final localizations = AppLocalizations.of(
-      context,
-    )!;
-
+    final localizations = AppLocalizations.of(context)!;
+    
     // Kiểm tra các trường nhập liệu
     if (_oldPasswordController.text.isEmpty ||
         _newPasswordController.text.isEmpty ||
         _confirmPasswordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            localizations.fillInfoWarning,
-          ),
+          content: Text(localizations.fillInfoWarning),
           backgroundColor: Colors.orange,
         ),
       );
@@ -176,14 +141,10 @@ class _ChangePasswordPageState
     }
 
     // Kiểm tra mật khẩu mới và xác nhận mật khẩu
-    if (_newPasswordController.text !=
-        _confirmPasswordController.text) {
+    if (_newPasswordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            localizations
-                .registerSnackbarPasswordMismatch,
-          ),
+          content: Text(localizations.registerSnackbarPasswordMismatch),
           backgroundColor: Colors.red,
         ),
       );
@@ -194,10 +155,7 @@ class _ChangePasswordPageState
     if (_newPasswordController.text.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            localizations
-                .registerSnackbarPasswordShort,
-          ),
+          content: Text(localizations.registerSnackbarPasswordShort),
           backgroundColor: Colors.red,
         ),
       );
@@ -216,13 +174,11 @@ class _ChangePasswordPageState
     Future.delayed(const Duration(seconds: 2), () {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            localizations.profileSaveSuccess,
-          ),
+          content: Text(localizations.profileSaveSuccess),
           backgroundColor: Colors.green,
         ),
       );
-
+      
       // Xóa các trường nhập liệu sau khi thành công
       _oldPasswordController.clear();
       _newPasswordController.clear();
@@ -235,8 +191,7 @@ class _ChangePasswordPageState
     required TextEditingController controller,
     required String label,
     required IconData icon,
-    TextInputType keyboardType =
-        TextInputType.text,
+    TextInputType keyboardType = TextInputType.text,
     int maxLines = 1,
     bool isPassword = false,
     bool obscureText = true,
@@ -246,9 +201,7 @@ class _ChangePasswordPageState
       controller: controller,
       keyboardType: keyboardType,
       maxLines: maxLines,
-      obscureText: isPassword
-          ? obscureText
-          : false,
+      obscureText: isPassword ? obscureText : false,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(
@@ -258,19 +211,16 @@ class _ChangePasswordPageState
         suffixIcon: isPassword
             ? IconButton(
                 icon: Icon(
-                  obscureText
-                      ? Icons.visibility_off
-                      : Icons.visibility,
+                  obscureText ? Icons.visibility_off : Icons.visibility,
                   color: Colors.grey,
                 ),
                 onPressed: onToggleVisibility,
               )
             : null,
-        contentPadding:
-            const EdgeInsets.symmetric(
-              vertical: 16,
-              horizontal: 16,
-            ),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: 16,
+        ),
         fillColor: Colors.white,
         filled: true,
         border: OutlineInputBorder(
