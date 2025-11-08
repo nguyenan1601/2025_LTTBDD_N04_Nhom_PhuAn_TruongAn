@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import '/utils/localization.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
 
   @override
-  State<CalendarPage> createState() =>
-      _CalendarPageState();
+  State<CalendarPage> createState() => _CalendarPageState();
 }
 
-class _CalendarPageState
-    extends State<CalendarPage> {
+class _CalendarPageState extends State<CalendarPage> {
   DateTime _selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text('Lịch làm việc'),
+        title: Text(localizations.calendarTitle),
         backgroundColor: Colors.white,
         elevation: 1,
       ),
@@ -28,12 +29,10 @@ class _CalendarPageState
             color: Colors.white,
             padding: const EdgeInsets.all(16),
             child: Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  onPressed: () =>
-                      _changeMonth(-1),
+                  onPressed: () => _changeMonth(-1),
                   icon: Icon(
                     Icons.chevron_left,
                     color: Colors.grey[700],
@@ -48,8 +47,7 @@ class _CalendarPageState
                   ),
                 ),
                 IconButton(
-                  onPressed: () =>
-                      _changeMonth(1),
+                  onPressed: () => _changeMonth(1),
                   icon: Icon(
                     Icons.chevron_right,
                     color: Colors.grey[700],
@@ -73,11 +71,10 @@ class _CalendarPageState
             color: Colors.grey[50],
             padding: const EdgeInsets.all(16),
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Nhiệm vụ ngày ${_selectedDate.day}/${_selectedDate.month}',
+                  '${localizations.tasksForDay} ${_selectedDate.day}/${_selectedDate.month}',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -89,17 +86,17 @@ class _CalendarPageState
                   child: ListView(
                     children: [
                       _buildTaskItem(
-                        'Meeting với team',
+                        localizations.meetingTeam,
                         '09:00',
                         Colors.blue,
                       ),
                       _buildTaskItem(
-                        'Review code',
+                        localizations.reviewCode,
                         '14:00',
                         Colors.green,
                       ),
                       _buildTaskItem(
-                        'Deploy production',
+                        localizations.deployProd,
                         '16:30',
                         Colors.orange,
                       ),
@@ -115,14 +112,15 @@ class _CalendarPageState
   }
 
   Widget _buildCalendar() {
+    final localizations = AppLocalizations.of(context)!;
+    
     return GridView.builder(
       padding: const EdgeInsets.all(16),
-      gridDelegate:
-          const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 7,
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 8,
-          ),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 7,
+        mainAxisSpacing: 8,
+        crossAxisSpacing: 8,
+      ),
       itemCount: 42, // 6 weeks
       itemBuilder: (context, index) {
         final firstDay = DateTime(
@@ -138,45 +136,27 @@ class _CalendarPageState
           day,
         );
 
-        final isCurrentMonth =
-            currentDate.month ==
-            _selectedDate.month;
-        final isToday = _isSameDay(
-          currentDate,
-          DateTime.now(),
-        );
-        final isSelected = _isSameDay(
-          currentDate,
-          _selectedDate,
-        );
+        final isCurrentMonth = currentDate.month == _selectedDate.month;
+        final isToday = _isSameDay(currentDate, DateTime.now());
+        final isSelected = _isSameDay(currentDate, _selectedDate);
 
         return GestureDetector(
-          onTap: () => setState(
-            () => _selectedDate = currentDate,
-          ),
+          onTap: () => setState(() => _selectedDate = currentDate),
           child: Container(
             decoration: BoxDecoration(
               color: isSelected
                   ? Colors.blue
-                  : (isToday
-                        ? Colors.blue[50]
-                        : Colors.transparent),
+                  : (isToday ? Colors.blue[50] : Colors.transparent),
               shape: BoxShape.circle,
             ),
             child: Center(
               child: Text(
-                isCurrentMonth
-                    ? currentDate.day.toString()
-                    : '',
+                isCurrentMonth ? currentDate.day.toString() : '',
                 style: TextStyle(
                   color: isSelected
                       ? Colors.white
-                      : (isCurrentMonth
-                            ? Colors.grey[800]
-                            : Colors.grey[400]),
-                  fontWeight: isToday
-                      ? FontWeight.bold
-                      : FontWeight.normal,
+                      : (isCurrentMonth ? Colors.grey[800] : Colors.grey[400]),
+                  fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
             ),
@@ -186,11 +166,7 @@ class _CalendarPageState
     );
   }
 
-  Widget _buildTaskItem(
-    String title,
-    String time,
-    Color color,
-  ) {
+  Widget _buildTaskItem(String title, String time, Color color) {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
@@ -208,31 +184,16 @@ class _CalendarPageState
     );
   }
 
-  bool _isSameDay(
-    DateTime date1,
-    DateTime date2,
-  ) {
+  bool _isSameDay(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&
         date1.month == date2.month &&
         date1.day == date2.day;
   }
 
   String _getMonthName(int month) {
-    const months = [
-      'Tháng 1',
-      'Tháng 2',
-      'Tháng 3',
-      'Tháng 4',
-      'Tháng 5',
-      'Tháng 6',
-      'Tháng 7',
-      'Tháng 8',
-      'Tháng 9',
-      'Tháng 10',
-      'Tháng 11',
-      'Tháng 12',
-    ];
-    return months[month - 1];
+    final localizations = AppLocalizations.of(context)!;
+    final monthNames = localizations.getMonthNames();
+    return monthNames[month - 1];
   }
 
   void _changeMonth(int direction) {

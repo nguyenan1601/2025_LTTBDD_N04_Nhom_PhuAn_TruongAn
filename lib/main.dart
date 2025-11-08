@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import '/utils/localization.dart';
 import 'firebase_options.dart';
 import 'pages/login_page.dart';
 import 'pages/register_page.dart';
@@ -8,9 +11,6 @@ import 'pages/profile_page.dart';
 import 'pages/calendar_page.dart';
 import 'pages/statistics_page.dart';
 import 'services/auth_services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import ''; // nếu bạn dùng gen-l10n
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,7 +59,7 @@ class _MyAppState extends State<MyApp> {
         Locale('vi'),
       ],
       localizationsDelegates: const [
-        AppLocalizations.delegate, // gen-l10n
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -72,11 +72,14 @@ class _MyAppState extends State<MyApp> {
             return const SplashScreen();
           }
           if (snapshot.hasData) {
-            return const MainApp();
+            return MainApp(
+              onToggleLanguage: _toggleLanguage,
+              isEnglish:
+                  _locale.languageCode == 'en',
+            );
           } else {
             return AuthScreen(
-              onToggleLanguage:
-                  _toggleLanguage, // truyền callback xuống
+              onToggleLanguage: _toggleLanguage,
               isEnglish:
                   _locale.languageCode == 'en',
             );
@@ -104,7 +107,14 @@ class SplashScreen extends StatelessWidget {
 }
 
 class MainApp extends StatefulWidget {
-  const MainApp({super.key});
+  final VoidCallback onToggleLanguage;
+  final bool isEnglish;
+
+  const MainApp({
+    super.key,
+    required this.onToggleLanguage,
+    required this.isEnglish,
+  });
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -113,16 +123,28 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = const [
-    HomePage(),
-    CalendarPage(),
-    StatisticsPage(),
-    ProfilePage(),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(
+      context,
+    );
+
+    // Fallback nếu localization chưa sẵn sàng
+    if (localizations == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    final List<Widget> _pages = [
+      const HomePage(),
+      const CalendarPage(),
+      const StatisticsPage(),
+      const ProfilePage(),
+    ];
+
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -136,7 +158,7 @@ class _MainAppState extends State<MainApp> {
           BottomNavigationBarItem(
             icon: const Icon(Icons.home_outlined),
             activeIcon: const Icon(Icons.home),
-            label: t.home,
+            label: localizations.bottomNavHome,
           ),
           BottomNavigationBarItem(
             icon: const Icon(
@@ -145,7 +167,8 @@ class _MainAppState extends State<MainApp> {
             activeIcon: const Icon(
               Icons.calendar_today,
             ),
-            label: t.calendar,
+            label:
+                localizations.bottomNavCalendar,
           ),
           BottomNavigationBarItem(
             icon: const Icon(
@@ -154,14 +177,15 @@ class _MainAppState extends State<MainApp> {
             activeIcon: const Icon(
               Icons.bar_chart,
             ),
-            label: t.statistics,
+            label:
+                localizations.bottomNavStatistics,
           ),
           BottomNavigationBarItem(
             icon: const Icon(
               Icons.person_outlined,
             ),
             activeIcon: const Icon(Icons.person),
-            label: t.profile,
+            label: localizations.bottomNavProfile,
           ),
         ],
       ),
@@ -189,47 +213,132 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        title: Text(
-          widget.isEnglish
-              ? "Language: EN"
-              : "Ngôn ngữ: VI",
-          style: const TextStyle(
-            color: Colors.blue,
-          ),
-        ),
         actions: [
-          Switch(
-            value: widget.isEnglish,
-            onChanged: (value) =>
-                widget.onToggleLanguage(),
-            activeColor: Colors.blue,
+          // Switch ngôn ngữ
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(
+                20,
+              ),
+              border: Border.all(
+                color: Colors.grey[300]!,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Nút VI
+                GestureDetector(
+                  onTap: () {
+                    if (widget.isEnglish) {
+                      widget.onToggleLanguage();
+                    }
+                  },
+                  child: Container(
+                    width: 40,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          const BorderRadius.only(
+                            topLeft:
+                                Radius.circular(
+                                  20,
+                                ),
+                            bottomLeft:
+                                Radius.circular(
+                                  20,
+                                ),
+                          ),
+                      color: !widget.isEnglish
+                          ? Colors.blue
+                                .withOpacity(0.1)
+                          : Colors.transparent,
+                    ),
+                    child: Center(
+                      child: Text(
+                        'VI',
+                        style: TextStyle(
+                          color: !widget.isEnglish
+                              ? Colors.blue
+                              : Colors.grey[600],
+                          fontWeight:
+                              FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                // Nút EN
+                GestureDetector(
+                  onTap: () {
+                    if (!widget.isEnglish) {
+                      widget.onToggleLanguage();
+                    }
+                  },
+                  child: Container(
+                    width: 40,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          const BorderRadius.only(
+                            topRight:
+                                Radius.circular(
+                                  20,
+                                ),
+                            bottomRight:
+                                Radius.circular(
+                                  20,
+                                ),
+                          ),
+                      color: widget.isEnglish
+                          ? Colors.blue
+                                .withOpacity(0.1)
+                          : Colors.transparent,
+                    ),
+                    child: Center(
+                      child: Text(
+                        'EN',
+                        style: TextStyle(
+                          color: widget.isEnglish
+                              ? Colors.blue
+                              : Colors.grey[600],
+                          fontWeight:
+                              FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
+          const SizedBox(width: 16),
         ],
       ),
-      body: AnimatedSwitcher(
-        duration: const Duration(
-          milliseconds: 300,
-        ),
-        child: showLogin
-            ? LoginPage(
-                key: const ValueKey('login'),
-                onTapRegister: () => setState(
-                  () => showLogin = false,
-                ),
-              )
-            : RegisterPage(
-                key: const ValueKey('register'),
-                onTapLogin: () => setState(
-                  () => showLogin = true,
-                ),
+      body: showLogin
+          ? LoginPage(
+              key: Key(
+                'login_${widget.isEnglish ? 'en' : 'vi'}',
+              ), // Thêm key để rebuild khi đổi ngôn ngữ
+              onTapRegister: () => setState(
+                () => showLogin = false,
               ),
-      ),
+            )
+          : RegisterPage(
+              key: Key(
+                'register_${widget.isEnglish ? 'en' : 'vi'}',
+              ), // Thêm key để rebuild khi đổi ngôn ngữ
+              onTapLogin: () => setState(
+                () => showLogin = true,
+              ),
+            ),
     );
   }
 }

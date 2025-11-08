@@ -133,5 +133,18 @@
   "bottom_nav_calendar": "Lịch",
   "bottom_nav_statistics": "Thống kê",
   "bottom_nav_profile": "Hồ sơ",
-  "loading_text": "Đang tải..."
+  "loading_text": "Đang tải...",
+  "team_title": "Thành viên nhóm",
+  "team_intro": "Nhóm phát triển To-Do List",
+  "role_leader_backend": "Leader & Backend",
+  "role_frontend": "Frontend",
+  "label_school": "Đại học Phenikaa",
+  "label_faculty": "Công nghệ thông tin",
+  "label_major": "Kỹ thuật phần mềm",
+  "label_class": "CNTT2",
+  "label_student_id": "MSSV",
+  "label_dob": "Ngày sinh",
+  "label_email": "Email",
+  "language_english": "Tiếng Anh",
+  "language_vietnamese": "Tiếng Việt"
 }

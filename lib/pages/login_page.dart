@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/auth_services.dart';
+import '/utils/localization.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback onTapRegister;
@@ -21,12 +22,16 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
 
   void signIn() async {
+    final localizations = AppLocalizations.of(
+      context,
+    )!;
+
     if (emailController.text.isEmpty ||
         passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Vui lòng điền đầy đủ thông tin!',
+            localizations.fillInfoWarning,
           ),
           backgroundColor: Colors.orange,
         ),
@@ -50,8 +55,8 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text(
-            'Đăng nhập thành công!',
+          content: Text(
+            localizations.loginSuccess,
           ),
           backgroundColor: Colors.green[400],
           behavior: SnackBarBehavior.floating,
@@ -60,8 +65,8 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text(
-            'Đăng nhập thất bại! Vui lòng kiểm tra lại thông tin.',
+          content: Text(
+            localizations.loginFailed,
           ),
           backgroundColor: Colors.red[400],
           behavior: SnackBarBehavior.floating,
@@ -72,6 +77,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(
+      context,
+    )!;
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: SafeArea(
@@ -82,40 +91,11 @@ class _LoginPageState extends State<LoginPage> {
               crossAxisAlignment:
                   CrossAxisAlignment.start,
               children: [
-                // Back button
-                // IconButton(
-                //   onPressed: () =>
-                //       Navigator.of(context).pop(),
-                //   icon: Container(
-                //     padding: const EdgeInsets.all(
-                //       8,
-                //     ),
-                //     decoration: BoxDecoration(
-                //       color: Colors.white,
-                //       borderRadius:
-                //           BorderRadius.circular(
-                //             12,
-                //           ),
-                //       boxShadow: [
-                //         BoxShadow(
-                //           color: Colors.black12,
-                //           blurRadius: 8,
-                //           offset: Offset(0, 2),
-                //         ),
-                //       ],
-                //     ),
-                //     child: Icon(
-                //       Icons.arrow_back,
-                //       color: Colors.grey[700],
-                //       size: 20,
-                //     ),
-                //   ),
-                // ),
                 const SizedBox(height: 40),
 
                 // Header
                 Text(
-                  'Chào mừng\nquay trở lại!',
+                  localizations.welcomeTitleLogin,
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
@@ -125,7 +105,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Đăng nhập để tiếp tục quản lý nhiệm vụ',
+                  localizations
+                      .welcomeSubtitleLogin,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey[600],
@@ -147,7 +128,10 @@ class _LoginPageState extends State<LoginPage> {
                       BoxShadow(
                         color: Colors.black12,
                         blurRadius: 15,
-                        offset: Offset(0, 4),
+                        offset: const Offset(
+                          0,
+                          4,
+                        ),
                       ),
                     ],
                   ),
@@ -166,7 +150,8 @@ class _LoginPageState extends State<LoginPage> {
                           controller:
                               emailController,
                           decoration: InputDecoration(
-                            labelText: 'Email',
+                            labelText: localizations
+                                .loginEmailLabel,
                             labelStyle: TextStyle(
                               color: Colors
                                   .grey[600],
@@ -209,7 +194,8 @@ class _LoginPageState extends State<LoginPage> {
                               passwordController,
                           obscureText: true,
                           decoration: InputDecoration(
-                            labelText: 'Mật khẩu',
+                            labelText: localizations
+                                .loginPasswordLabel,
                             labelStyle: TextStyle(
                               color: Colors
                                   .grey[600],
@@ -270,7 +256,7 @@ class _LoginPageState extends State<LoginPage> {
                                     strokeWidth:
                                         2,
                                     valueColor:
-                                        AlwaysStoppedAnimation<
+                                        const AlwaysStoppedAnimation<
                                           Color
                                         >(
                                           Colors
@@ -279,8 +265,9 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 )
                               : Text(
-                                  'Đăng nhập',
-                                  style: TextStyle(
+                                  localizations
+                                      .loginButtonText,
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight:
                                         FontWeight
@@ -308,7 +295,8 @@ class _LoginPageState extends State<LoginPage> {
                                   horizontal: 16,
                                 ),
                             child: Text(
-                              'hoặc',
+                              localizations
+                                  .loginOrText,
                               style: TextStyle(
                                 color: Colors
                                     .grey[500],
@@ -338,10 +326,12 @@ class _LoginPageState extends State<LoginPage> {
                           style: OutlinedButton.styleFrom(
                             foregroundColor:
                                 Colors.blue,
-                            side: BorderSide(
-                              color: Colors.blue,
-                              width: 1.5,
-                            ),
+                            side:
+                                const BorderSide(
+                                  color:
+                                      Colors.blue,
+                                  width: 1.5,
+                                ),
                             shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.circular(
@@ -354,12 +344,15 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                           ),
                           child: Text(
-                            'Tạo tài khoản mới',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight:
-                                  FontWeight.w600,
-                            ),
+                            localizations
+                                .createAccountText,
+                            style:
+                                const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight:
+                                      FontWeight
+                                          .w600,
+                                ),
                           ),
                         ),
                       ),
@@ -372,7 +365,7 @@ class _LoginPageState extends State<LoginPage> {
                 // Footer
                 Center(
                   child: Text(
-                    'Quản lý nhiệm vụ hiệu quả hơn',
+                    localizations.footerTextHome,
                     style: TextStyle(
                       color: Colors.grey[500],
                       fontSize: 14,

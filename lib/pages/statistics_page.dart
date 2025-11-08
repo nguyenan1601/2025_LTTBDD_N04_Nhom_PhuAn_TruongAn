@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '/utils/localization.dart';
 
 class StatisticsPage extends StatelessWidget {
   const StatisticsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text('Thống kê hiệu suất'),
+        title: Text(localizations!.statisticsPageTitle),
         backgroundColor: Colors.white,
         elevation: 1,
       ),
@@ -22,7 +25,7 @@ class StatisticsPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildSummaryCard(
-                    'Hoàn thành',
+                    localizations.statisticsSummaryCompleted,
                     '12',
                     Colors.green,
                     Icons.check_circle,
@@ -31,7 +34,7 @@ class StatisticsPage extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildSummaryCard(
-                    'Đang làm',
+                    localizations.statisticsSummaryInProgress,
                     '5',
                     Colors.orange,
                     Icons.access_time,
@@ -40,7 +43,7 @@ class StatisticsPage extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildSummaryCard(
-                    'Trễ hạn',
+                    localizations.statisticsSummaryOverdue,
                     '2',
                     Colors.red,
                     Icons.error,
@@ -53,7 +56,7 @@ class StatisticsPage extends StatelessWidget {
 
             // Weekly Progress
             _buildSectionCard(
-              title: 'Tiến độ tuần này',
+              title: localizations.statisticsWeeklyProgress,
               child: Container(
                 height: 200,
                 padding: const EdgeInsets.all(16),
@@ -67,28 +70,23 @@ class StatisticsPage extends StatelessWidget {
                       bottomTitles: AxisTitles(
                         sideTitles: SideTitles(
                           showTitles: true,
-                          getTitlesWidget:
-                              (value, meta) {
-                                const days = [
-                                  'T2',
-                                  'T3',
-                                  'T4',
-                                  'T5',
-                                  'T6',
-                                  'T7',
-                                  'CN',
-                                ];
-                                return Padding(
-                                  padding:
-                                      const EdgeInsets.only(
-                                        top: 8.0,
-                                      ),
-                                  child: Text(
-                                    days[value
-                                        .toInt()],
-                                  ),
-                                );
-                              },
+                          getTitlesWidget: (value, meta) {
+                            final days = [
+                              localizations.statisticsDaysMon,
+                              localizations.statisticsDaysTue,
+                              localizations.statisticsDaysWed,
+                              localizations.statisticsDaysThu,
+                              localizations.statisticsDaysFri,
+                              localizations.statisticsDaysSat,
+                              localizations.statisticsDaysSun,
+                            ];
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                days[value.toInt()],
+                              ),
+                            );
+                          },
                         ),
                       ),
                       leftTitles: AxisTitles(
@@ -174,7 +172,7 @@ class StatisticsPage extends StatelessWidget {
 
             // Task Distribution
             _buildSectionCard(
-              title: 'Phân loại nhiệm vụ',
+              title: localizations.statisticsTaskDistribution,
               child: Container(
                 height: 200,
                 padding: const EdgeInsets.all(16),
@@ -215,7 +213,7 @@ class StatisticsPage extends StatelessWidget {
 
             // Productivity Trends
             _buildSectionCard(
-              title: 'Xu hướng năng suất',
+              title: localizations.statisticsProductivityTrends,
               child: Container(
                 height: 200,
                 padding: const EdgeInsets.all(16),
@@ -296,6 +294,7 @@ class StatisticsPage extends StatelessWidget {
               color: Colors.grey[600],
               fontSize: 12,
             ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -311,8 +310,7 @@ class StatisticsPage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title,

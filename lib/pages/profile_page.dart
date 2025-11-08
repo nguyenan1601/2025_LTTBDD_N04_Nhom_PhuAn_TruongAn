@@ -4,67 +4,132 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_app/pages/EditProfilePage.dart';
 import 'package:my_app/pages/NotificationPage.dart';
 import '/services/auth_services.dart';
+import '/utils/localization.dart';
 import 'security_page.dart';
-import 'page/IntroductionPage.dart';
+import 'IntroductionPage.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() =>
-      _ProfilePageState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState
-    extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage> {
   final auth = AuthService();
   Map<String, dynamic>? userData;
   bool _isLoading = true;
+  String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    _loadUserData();
+    // Load basic user data without localization
+    _loadBasicUserData();
   }
 
-  // 🔹 Lấy dữ liệu người dùng từ Firestore (theo tài khoản hiện tại)
-  Future<void> _loadUserData() async {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Now we can safely access inherited widgets like Localizations
+    if (userData == null) {
+      _loadUserDataWithLocalization();
+    }
+  }
+
+  // Load basic user data without localization
+  Future<void> _loadBasicUserData() async {
     try {
-      final user =
-          FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        throw Exception(
-          'Không tìm thấy người dùng đang đăng nhập.',
-        );
-      }
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.email)
+            .get();
 
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.email)
-          .get();
-
-      if (doc.exists) {
-        setState(() {
-          userData = doc.data();
-        });
-      } else {
-        // Nếu chưa có dữ liệu, khởi tạo tạm
-        setState(() {
-          userData = {
-            'name': 'Chưa có tên',
-            'email': user.email,
-            'phone': '',
-            'address': '',
-          };
-        });
+        if (doc.exists) {
+          setState(() {
+            userData = doc.data();
+          });
+        } else {
+          // Initialize with basic data
+          setState(() {
+            userData = {
+              'name': 'User',
+              'email': user.email,
+              'phone': '',
+              'address': '',
+            };
+          });
+        }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Lỗi khi tải hồ sơ: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      setState(() {
+        _errorMessage = 'Error loading user data: $e';
+      });
+    }
+  }
+
+  // Load user data with localization (safe to call after initState)
+  Future<void> _loadUserDataWithLocalization() async {
+    final localizations = AppLocalizations.of(context);
+
+    if (localizations == null) {
+      // Localizations not available yet, try again later
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) _loadUserDataWithLocalization();
+      });
+      return;
+    }
+
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        throw Exception(localizations.profileLoadingError);
+      }
+
+      // If we already have basic data, just update the default name
+      if (userData != null) {
+        if (userData!['name'] == 'User') {
+          setState(() {
+            userData!['name'] = localizations.profileDefaultUserName;
+          });
+        }
+      } else {
+        // Load fresh data
+        final doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.email)
+            .get();
+
+        if (doc.exists) {
+          setState(() {
+            userData = doc.data();
+          });
+        } else {
+          setState(() {
+            userData = {
+              'name': localizations.profileDefaultUserName,
+              'email': user.email,
+              'phone': '',
+              'address': '',
+            };
+          });
+        }
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = '${localizations.profileLoadingError}: $e';
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(_errorMessage!),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } finally {
       setState(() => _isLoading = false);
     }
@@ -75,22 +140,42 @@ class _ProfilePageState
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            const EditProfilePage(), // Không cần truyền email nữa
+        builder: (context) => const EditProfilePage(),
       ),
     );
 
-    if (result == true) {
-      _loadUserData(); // Reload lại thông tin sau khi chỉnh sửa
+    if (result == true && mounted) {
+      _loadUserDataWithLocalization();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+
+    // Show error if localization is not available
+    if (localizations == null) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 16),
+              Text(
+                _errorMessage ?? 'Loading...',
+                style: const TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text('Hồ sơ cá nhân'),
+        title: Text(localizations.profilePageTitle),
         backgroundColor: Colors.white,
         elevation: 1,
       ),
@@ -122,8 +207,7 @@ class _ProfilePageState
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    userData?['name'] ??
-                        'Người dùng',
+                    userData?['name'] ?? localizations.profileDefaultUserName,
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -137,6 +221,15 @@ class _ProfilePageState
                     ),
                   ),
 
+                  if (_errorMessage != null) ...[
+                    const SizedBox(height: 16),
+                    Text(
+                      _errorMessage!,
+                      style: const TextStyle(color: Colors.red),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+
                   const SizedBox(height: 32),
 
                   // Stats Cards
@@ -144,7 +237,7 @@ class _ProfilePageState
                     children: [
                       Expanded(
                         child: _buildStatCard(
-                          'Nhiệm vụ',
+                          localizations.profileTasksLabel,
                           '24',
                           Icons.task_alt,
                           Colors.green,
@@ -153,7 +246,7 @@ class _ProfilePageState
                       const SizedBox(width: 12),
                       Expanded(
                         child: _buildStatCard(
-                          'Dự án',
+                          localizations.profileProjectsLabel,
                           '8',
                           Icons.folder,
                           Colors.blue,
@@ -162,7 +255,7 @@ class _ProfilePageState
                       const SizedBox(width: 12),
                       Expanded(
                         child: _buildStatCard(
-                          'Ngày',
+                          localizations.profileDaysLabel,
                           '127',
                           Icons.calendar_today,
                           Colors.orange,
@@ -175,61 +268,58 @@ class _ProfilePageState
 
                   // Menu Items
                   _buildMenuCard(
-                    title: 'Chỉnh sửa hồ sơ',
+                    title: localizations.profileEditMenu,
                     icon: Icons.edit,
                     color: Colors.blue,
                     onTap: _navigateToEditProfile,
                   ),
                   _buildMenuCard(
-                    title: 'Cài đặt thông báo',
+                    title: localizations.profileNotificationMenu,
                     icon: Icons.notifications,
                     color: Colors.orange,
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              const NotificationPage(),
+                          builder: (context) => const NotificationPage(),
                         ),
                       );
                     },
                   ),
                   _buildMenuCard(
-                    title: 'Bảo mật',
+                    title: localizations.profileSecurityMenu,
                     icon: Icons.security,
                     color: Colors.green,
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              const SecurityPage(),
+                          builder: (context) => const SecurityPage(),
                         ),
                       );
                     },
                   ),
                   _buildMenuCard(
-                    title: 'Trợ giúp & Hỗ trợ',
+                    title: localizations.profileHelpMenu,
                     icon: Icons.help,
                     color: Colors.purple,
                     onTap: () {},
                   ),
                   _buildMenuCard(
-                    title: 'Giới thiệu nhóm',
+                    title: localizations.teamTitle,
                     icon: Icons.info,
                     color: Colors.green,
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              const IntroductionPage(),
+                          builder: (context) => const IntroductionPage(),
                         ),
                       );
                     },
                   ),
                   _buildMenuCard(
-                    title: 'Đăng xuất',
+                    title: localizations.profileLogoutMenu,
                     icon: Icons.logout,
                     color: Colors.red,
                     onTap: () => auth.signOut(),

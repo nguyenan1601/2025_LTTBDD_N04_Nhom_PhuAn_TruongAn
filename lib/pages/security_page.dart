@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'page/ChangePasswordPage.dart';
+import '/utils/localization.dart';
+import 'ChangePasswordPage.dart';
 
 class SecurityPage extends StatelessWidget {
   const SecurityPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text('Bảo mật'),
+        title: Text(localizations!.securityPageTitle),
         backgroundColor: Colors.white,
         elevation: 1,
       ),
@@ -17,80 +20,67 @@ class SecurityPage extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            //Đổi mật khẩu
+            // Đổi mật khẩu
             _buildMenuCard(
               context: context,
-              title: 'Đổi mật khẩu',
+              title: localizations.securityChangePassword,
               icon: Icons.lock_outline,
               color: Colors.blue,
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        ChangePasswordPage(),
+                    builder: (context) => ChangePasswordPage(),
                   ),
                 );
               },
             ),
 
-            //Xác thực
+            // Xác thực hai yếu tố
             _buildMenuCard(
               context: context,
-              title: 'Xác thực hai yếu tố (2FA)',
+              title: localizations.securityTwoFactorAuth,
               icon: Icons.shield_outlined,
               color: Colors.green,
               onTap: () {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Mở cài đặt 2FA',
-                    ),
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(localizations.securityTwoFactorSnackbar),
+                    backgroundColor: Colors.green,
                   ),
                 );
               },
             ),
 
-            //Thiết bị đã đăng nhập
+            // Thiết bị đã đăng nhập
             _buildMenuCard(
               context: context,
-              title: 'Thiết bị đã đăng nhập',
+              title: localizations.securityLoggedDevices,
               icon: Icons.devices_other_outlined,
               color: Colors.orange,
               onTap: () {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Xem lịch sử đăng nhập',
-                    ),
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(localizations.securityLoggedDevicesSnackbar),
+                    backgroundColor: Colors.orange,
                   ),
                 );
               },
             ),
 
-            const SizedBox(
-              height: 24,
-            ), // Thêm khoảng cách
-            //Xóa tài khoản
+            const SizedBox(height: 24),
+            
+            // Xóa tài khoản
             _buildMenuCard(
               context: context,
-              title: 'Xóa tài khoản',
+              title: localizations.securityDeleteAccount,
               icon: Icons.delete_forever_outlined,
               color: Colors.red,
               onTap: () {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Yêu cầu xóa tài khoản đã được gửi',
-                    ),
-                    backgroundColor: Colors
-                        .red, // SnackBar màu đỏ
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(localizations.securityDeleteAccountSnackbar),
+                    backgroundColor: Colors.red,
                   ),
                 );
               },
@@ -101,10 +91,8 @@ class SecurityPage extends StatelessWidget {
     );
   }
 
-  //Widget giống với ProfilePage
   Widget _buildMenuCard({
-    required BuildContext
-    context, // Cần context để hiển thị SnackBar
+    required BuildContext context,
     required String title,
     required IconData icon,
     required Color color,
@@ -125,10 +113,7 @@ class SecurityPage extends StatelessWidget {
           title,
           style: TextStyle(
             fontWeight: FontWeight.w500,
-            // Đổi màu chữ nếu là nút Xóa
-            color: (color == Colors.red)
-                ? Colors.red
-                : Colors.grey[800],
+            color: (color == Colors.red) ? Colors.red : Colors.grey[800],
           ),
         ),
         trailing: Icon(

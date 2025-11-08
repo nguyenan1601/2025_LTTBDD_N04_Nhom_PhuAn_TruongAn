@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import '/utils/localization.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text(
-          'Thông báo & Hoạt động',
-        ),
+        title: Text(localizations.notificationPageTitle),
         backgroundColor: Colors.white,
         elevation: 1,
       ),
@@ -20,62 +21,51 @@ class NotificationPage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(
-              12,
-            ), // Bo góc đồng bộ
+            borderRadius: BorderRadius.circular(12), // Bo góc đồng bộ
             boxShadow: [
               BoxShadow(
-                color: Colors.black12.withOpacity(
-                  0.05,
-                ),
+                color: Colors.black12.withOpacity(0.05),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
             ],
           ),
-          padding: const EdgeInsets.symmetric(
-            vertical: 8,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //Thông báo 1
+              // Thông báo 1
               _buildStaticNotificationItem(
-                title: 'Hoàn thành nhiệm vụ',
-                subtitle:
-                    'Đã hoàn thành Task: "Thiết kế UI cho trang chủ"',
-                time: '3 phút trước',
+                title: localizations.notificationTaskCompletedTitle,
+                subtitle: localizations.notificationTaskCompletedSubtitle,
+                time: localizations.notificationTaskCompletedTime,
                 icon: Icons.check_circle_outline,
                 color: Colors.green,
               ),
 
-              //Thông báo 2
+              // Thông báo 2
               _buildStaticNotificationItem(
-                title: 'Đã chỉnh sửa hồ sơ',
-                subtitle:
-                    'Hồ sơ cá nhân đã được cập nhật thành công.',
-                time: 'Hôm nay, 10:30 AM',
+                title: localizations.notificationProfileUpdatedTitle,
+                subtitle: localizations.notificationProfileUpdatedSubtitle,
+                time: localizations.notificationProfileUpdatedTime,
                 icon: Icons.edit_note,
                 color: Colors.blue,
               ),
 
-              //Thông báo 3
+              // Thông báo 3
               _buildStaticNotificationItem(
-                title: 'Cập nhật Dự án',
-                subtitle:
-                    'Dự án "Ứng dụng di động" đã được thêm 2 nhiệm vụ mới.',
-                time: 'Hôm qua, 4:15 PM',
+                title: localizations.notificationProjectUpdatedTitle,
+                subtitle: localizations.notificationProjectUpdatedSubtitle,
+                time: localizations.notificationProjectUpdatedTime,
                 icon: Icons.folder_open,
                 color: Colors.orange,
               ),
 
-              //Thông báo 4
+              // Thông báo 4
               _buildStaticNotificationItem(
-                title: 'Cảnh báo Bảo mật',
-                subtitle:
-                    'Phát hiện đăng nhập từ thiết bị lạ.',
-                time: '28/10/2025',
+                title: localizations.notificationSecurityAlertTitle,
+                subtitle: localizations.notificationSecurityAlertSubtitle,
+                time: localizations.notificationSecurityAlertTime,
                 icon: Icons.security,
                 color: Colors.red,
               ),
@@ -100,8 +90,7 @@ class NotificationPage extends StatelessWidget {
         vertical: 12.0,
       ),
       child: Row(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Icon bên trái
           Container(
@@ -121,8 +110,7 @@ class NotificationPage extends StatelessWidget {
           // Nội dung chính
           Expanded(
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
@@ -145,9 +133,7 @@ class NotificationPage extends StatelessWidget {
 
           // Thời gian bên phải
           Padding(
-            padding: const EdgeInsets.only(
-              top: 4.0,
-            ),
+            padding: const EdgeInsets.only(top: 4.0),
             child: Text(
               time,
               style: TextStyle(

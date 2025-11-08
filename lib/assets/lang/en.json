@@ -133,5 +133,19 @@
   "bottom_nav_calendar": "Calendar",
   "bottom_nav_statistics": "Statistics",
   "bottom_nav_profile": "Profile",
-  "loading_text": "Loading..."
+  "loading_text": "Loading...",
+
+  "team_title": "Team Members",
+  "team_intro": "To-Do List Development Team",
+  "role_leader_backend": "Leader & Backend",
+  "role_frontend": "Frontend",
+  "label_school": "Phenikaa University",
+  "label_faculty": "Information Technology",
+  "label_major": "Software Engineering",
+  "label_class": "Class",
+  "label_student_id": "Student ID",
+  "label_dob": "Date of Birth",
+  "label_email": "Email",
+  "language_english": "English",
+  "language_vietnamese": "Vietnamese"
 }

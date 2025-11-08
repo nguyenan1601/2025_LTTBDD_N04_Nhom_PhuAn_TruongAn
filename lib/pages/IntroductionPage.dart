@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
+import '/utils/localization.dart';
 
 class IntroductionPage extends StatelessWidget {
   const IntroductionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text('Thành viên nhóm'),
+        title: Text(localizations.teamTitle),
         backgroundColor: Colors.white,
         elevation: 1,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(
+            Padding(
+              padding: const EdgeInsets.only(
                 left: 8.0,
                 bottom: 16,
               ),
               child: Text(
-                'Nhóm phát triển To-Do List',
-                style: TextStyle(
+                localizations.teamIntro,
+                style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Colors.blue,
@@ -33,13 +35,12 @@ class IntroductionPage extends StatelessWidget {
               ),
             ),
 
-            //CONTAINER LỚN BAO BỌC HAI THÀNH VIÊN
+            // CONTAINER LỚN BAO BỌC HAI THÀNH VIÊN
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius:
-                    BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black12,
@@ -49,63 +50,47 @@ class IntroductionPage extends StatelessWidget {
                 ],
               ),
               child: Row(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  //THÀNH VIÊN 1
+                  // THÀNH VIÊN 1
                   Expanded(
                     child: _buildMemberCard(
+                      context: context, // Thêm context ở đây
                       name: 'Nguyễn Phú An',
-                      role: 'Leader & Backend',
+                      role: localizations.roleLeaderBackend,
                       studentId: '22010196',
-                      // THÔNG TIN CỤ THỂ
-                      school: 'Đại học Phenikaa',
-                      faculty:
-                          'Khoa Công nghệ thông tin',
-                      major:
-                          'Công nghệ thông tin',
-                      className: 'CNTT3',
-                      email:
-                          '22010196@st.phenikaa-edu.vn',
+                      school: localizations.labelSchool,
+                      faculty: localizations.labelFaculty,
+                      major: localizations.labelMajor,
+                      className: localizations.labelClass,
+                      email: '22010196@st.phenikaa-edu.vn',
                       dob: '15/03/2004',
-                      imagePath: 'images/he.jpg',
+                      imagePath: 'lib/images/profileimg.jpg',
                       isLeft: true,
                     ),
                   ),
 
                   // Đường phân cách dọc
-                  VerticalDivider(
-                    width: 30,
-                    thickness: 1,
-                    color: const Color.fromARGB(
-                      255,
-                      96,
-                      38,
-                      38,
-                    ),
-                    indent: 10,
-                    endIndent: 10,
+                  Container(
+                    width: 1,
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    color: Colors.grey[300],
                   ),
 
-                  //THÀNH VIÊN 2
+                  // THÀNH VIÊN 2
                   Expanded(
                     child: _buildMemberCard(
-                      name:
-                          'Nguyễn Thế Trường An',
-                      role: 'Frontend',
+                      context: context, // Thêm context ở đây
+                      name: 'Nguyễn Thế Trường An',
+                      role: localizations.roleFrontend,
                       studentId: '22010253',
-                      // THÔNG TIN CỤ THỂ
-                      school: 'Đại học Phenikaa',
-                      faculty:
-                          'Khoa Công nghệ thông tin',
-                      major:
-                          'Công nghệ thông tin',
-                      className: 'CNTT3',
-                      // HẾT THÔNG TIN CỤ THỂ
-                      email:
-                          '22010253@st.phenikaa-edu.vn',
+                      school: localizations.labelSchool,
+                      faculty: localizations.labelFaculty,
+                      major: localizations.labelMajor,
+                      className: localizations.labelClass,
+                      email: '22010253@st.phenikaa-edu.vn',
                       dob: '30/08/2004',
-                      imagePath: 'images/he.jpg',
+                      imagePath: 'lib/images/profileimg.jpg',
                       isLeft: false,
                     ),
                   ),
@@ -120,6 +105,7 @@ class IntroductionPage extends StatelessWidget {
 
   // Widget thành viên nhóm
   Widget _buildMemberCard({
+    required BuildContext context, // Thêm context như một parameter
     required String name,
     required String role,
     required String studentId,
@@ -132,11 +118,12 @@ class IntroductionPage extends StatelessWidget {
     required String imagePath,
     required bool isLeft,
   }) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // ẢNH AVATAR (Placeholder)
+        // ẢNH AVATAR
         Container(
           width: 80,
           height: 80,
@@ -146,10 +133,9 @@ class IntroductionPage extends StatelessWidget {
               color: Colors.blue,
               width: 2,
             ),
-            image: DecorationImage(
-              image: AssetImage(imagePath),
-              fit: BoxFit
-                  .cover, // Đảm bảo ảnh che phủ hết khung tròn
+            image: const DecorationImage(
+              image: AssetImage('lib/images/profileimg.jpg'),
+              fit: BoxFit.cover,
             ),
           ),
         ),
@@ -168,7 +154,7 @@ class IntroductionPage extends StatelessWidget {
         Text(
           role,
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,
             color: Colors.blue,
@@ -179,37 +165,37 @@ class IntroductionPage extends StatelessWidget {
         // PHẦN THÔNG TIN CHI TIẾT
         _buildInfoRow(
           Icons.account_balance,
-          "Trường",
+          localizations.labelSchool,
           school,
         ),
         _buildInfoRow(
           Icons.book,
-          "Khoa",
+          localizations.labelFaculty,
           faculty,
         ),
         _buildInfoRow(
           Icons.school,
-          "Ngành học",
+          localizations.labelMajor,
           major,
         ),
         _buildInfoRow(
           Icons.class_,
-          "Lớp",
+          localizations.labelClass,
           className,
         ),
         _buildInfoRow(
           Icons.credit_card,
-          "MSSV",
+          localizations.labelStudentId,
           studentId,
         ),
         _buildInfoRow(
           Icons.calendar_today,
-          "Ngày sinh",
+          localizations.labelDob,
           dob,
         ),
         _buildInfoRow(
           Icons.email,
-          "Email",
+          localizations.labelEmail,
           email,
           isEmail: true,
         ),
@@ -227,14 +213,10 @@ class IntroductionPage extends StatelessWidget {
     bool isEmail = false,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 4.0,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
-        mainAxisAlignment:
-            MainAxisAlignment.start,
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(
             icon,
@@ -242,11 +224,9 @@ class IntroductionPage extends StatelessWidget {
             color: Colors.grey[600],
           ),
           const SizedBox(width: 8),
-
           Expanded(
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Label (Tiêu đề nhỏ)
                 Text(
@@ -262,9 +242,7 @@ class IntroductionPage extends StatelessWidget {
                   value,
                   style: TextStyle(
                     fontSize: 12,
-                    color: isEmail
-                        ? Colors.blue
-                        : Colors.grey[700],
+                    color: isEmail ? Colors.blue : Colors.grey[700],
                   ),
                 ),
               ],
