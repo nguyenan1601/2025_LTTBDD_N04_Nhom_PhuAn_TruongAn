@@ -9,6 +9,8 @@ import 'pages/calendar_page.dart';
 import 'pages/statistics_page.dart';
 import 'services/auth_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import ''; // nếu bạn dùng gen-l10n
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,11 +18,28 @@ void main() async {
     options:
         DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale _locale = const Locale(
+    'vi',
+  ); // mặc định là tiếng Việt
+
+  void _toggleLanguage() {
+    setState(() {
+      _locale = _locale.languageCode == 'vi'
+          ? const Locale('en')
+          : const Locale('vi');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +53,17 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: 'Inter',
       ),
+      locale: _locale,
+      supportedLocales: const [
+        Locale('en'),
+        Locale('vi'),
+      ],
+      localizationsDelegates: const [
+        AppLocalizations.delegate, // gen-l10n
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       home: StreamBuilder<User?>(
         stream: authStream,
         builder: (context, snapshot) {
@@ -44,7 +74,12 @@ class MyApp extends StatelessWidget {
           if (snapshot.hasData) {
             return const MainApp();
           } else {
-            return const AuthScreen();
+            return AuthScreen(
+              onToggleLanguage:
+                  _toggleLanguage, // truyền callback xuống
+              isEnglish:
+                  _locale.languageCode == 'en',
+            );
           }
         },
       ),
@@ -87,6 +122,7 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -96,30 +132,36 @@ class _MainAppState extends State<MainApp> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey[600],
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Trang chủ',
+            icon: const Icon(Icons.home_outlined),
+            activeIcon: const Icon(Icons.home),
+            label: t.home,
           ),
           BottomNavigationBarItem(
-            icon: Icon(
+            icon: const Icon(
               Icons.calendar_today_outlined,
             ),
-            activeIcon: Icon(
+            activeIcon: const Icon(
               Icons.calendar_today,
             ),
-            label: 'Lịch',
+            label: t.calendar,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_outlined),
-            activeIcon: Icon(Icons.bar_chart),
-            label: 'Thống kê',
+            icon: const Icon(
+              Icons.bar_chart_outlined,
+            ),
+            activeIcon: const Icon(
+              Icons.bar_chart,
+            ),
+            label: t.statistics,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outlined),
-            activeIcon: Icon(Icons.person),
-            label: 'Hồ sơ',
+            icon: const Icon(
+              Icons.person_outlined,
+            ),
+            activeIcon: const Icon(Icons.person),
+            label: t.profile,
           ),
         ],
       ),
@@ -128,7 +170,14 @@ class _MainAppState extends State<MainApp> {
 }
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key});
+  final VoidCallback onToggleLanguage;
+  final bool isEnglish;
+
+  const AuthScreen({
+    super.key,
+    required this.onToggleLanguage,
+    required this.isEnglish,
+  });
 
   @override
   State<AuthScreen> createState() =>
@@ -140,21 +189,47 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
-      child: showLogin
-          ? LoginPage(
-              key: const ValueKey('login'),
-              onTapRegister: () => setState(
-                () => showLogin = false,
+    final t = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: Text(
+          widget.isEnglish
+              ? "Language: EN"
+              : "Ngôn ngữ: VI",
+          style: const TextStyle(
+            color: Colors.blue,
+          ),
+        ),
+        actions: [
+          Switch(
+            value: widget.isEnglish,
+            onChanged: (value) =>
+                widget.onToggleLanguage(),
+            activeColor: Colors.blue,
+          ),
+        ],
+      ),
+      body: AnimatedSwitcher(
+        duration: const Duration(
+          milliseconds: 300,
+        ),
+        child: showLogin
+            ? LoginPage(
+                key: const ValueKey('login'),
+                onTapRegister: () => setState(
+                  () => showLogin = false,
+                ),
+              )
+            : RegisterPage(
+                key: const ValueKey('register'),
+                onTapLogin: () => setState(
+                  () => showLogin = true,
+                ),
               ),
-            )
-          : RegisterPage(
-              key: const ValueKey('register'),
-              onTapLogin: () => setState(
-                () => showLogin = true,
-              ),
-            ),
+      ),
     );
   }
 }
