@@ -5,15 +5,18 @@ import 'package:my_app/pages/EditProfilePage.dart';
 import 'package:my_app/pages/NotificationPage.dart';
 import '/services/auth_services.dart';
 import 'security_page.dart';
+import 'page/IntroductionPage.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<ProfilePage> createState() =>
+      _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState
+    extends State<ProfilePage> {
   final auth = AuthService();
   Map<String, dynamic>? userData;
   bool _isLoading = true;
@@ -27,9 +30,12 @@ class _ProfilePageState extends State<ProfilePage> {
   // 🔹 Lấy dữ liệu người dùng từ Firestore (theo tài khoản hiện tại)
   Future<void> _loadUserData() async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user =
+          FirebaseAuth.instance.currentUser;
       if (user == null) {
-        throw Exception('Không tìm thấy người dùng đang đăng nhập.');
+        throw Exception(
+          'Không tìm thấy người dùng đang đăng nhập.',
+        );
       }
 
       final doc = await FirebaseFirestore.instance
@@ -69,7 +75,8 @@ class _ProfilePageState extends State<ProfilePage> {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const EditProfilePage(), // Không cần truyền email nữa
+        builder: (context) =>
+            const EditProfilePage(), // Không cần truyền email nữa
       ),
     );
 
@@ -88,7 +95,9 @@ class _ProfilePageState extends State<ProfilePage> {
         elevation: 1,
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
           : SingleChildScrollView(
               padding: const EdgeInsets.all(24),
               child: Column(
@@ -100,13 +109,21 @@ class _ProfilePageState extends State<ProfilePage> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.blue[100],
-                      border: Border.all(color: Colors.blue, width: 3),
+                      border: Border.all(
+                        color: Colors.blue,
+                        width: 3,
+                      ),
                     ),
-                    child: Icon(Icons.person, size: 60, color: Colors.blue[600]),
+                    child: Icon(
+                      Icons.person,
+                      size: 60,
+                      color: Colors.blue[600],
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    userData?['name'] ?? 'Người dùng',
+                    userData?['name'] ??
+                        'Người dùng',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -115,7 +132,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   Text(
                     userData?['email'] ?? '',
-                    style: TextStyle(color: Colors.grey[600]),
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                    ),
                   ),
 
                   const SizedBox(height: 32),
@@ -169,7 +188,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const NotificationPage(),
+                          builder: (context) =>
+                              const NotificationPage(),
                         ),
                       );
                     },
@@ -182,7 +202,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const SecurityPage(),
+                          builder: (context) =>
+                              const SecurityPage(),
                         ),
                       );
                     },
@@ -192,6 +213,20 @@ class _ProfilePageState extends State<ProfilePage> {
                     icon: Icons.help,
                     color: Colors.purple,
                     onTap: () {},
+                  ),
+                  _buildMenuCard(
+                    title: 'Giới thiệu nhóm',
+                    icon: Icons.info,
+                    color: Colors.green,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const IntroductionPage(),
+                        ),
+                      );
+                    },
                   ),
                   _buildMenuCard(
                     title: 'Đăng xuất',
@@ -232,7 +267,11 @@ class _ProfilePageState extends State<ProfilePage> {
               color: color.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: color, size: 20),
+            child: Icon(
+              icon,
+              color: color,
+              size: 20,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
@@ -279,7 +318,11 @@ class _ProfilePageState extends State<ProfilePage> {
             color: Colors.grey[800],
           ),
         ),
-        trailing: Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          size: 16,
+          color: Colors.grey[400],
+        ),
         onTap: onTap,
       ),
     );
